@@ -1,10 +1,16 @@
-<?php
-$con = mysqli_connect('localhost','root','lucy','twirl');
+<?php require 'config/config.php'; ?>
 
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Twirl Network</title>
+</head>
+<body>
+ <h1>Welcome to Twirl Network</h1>
+  <h1>Hello <?php if(isset($_SESSION['username'])) echo $_SESSION['username']; ?></h1>
 
-if(mysqli_connect_errno()){
-
-    die('Connection failed '.mysqli_connect_errno());
-}
-
-$query = mysqli_query($con,"INSERT INTO test VALUES(2,'Lucija') ");
+</body>
+</html>
