@@ -8,6 +8,12 @@
     src: url("../fonts/Bellota-BoldItalic.otf");
 }
 
+body {
+
+    background-color: #d6d6d6;
+
+}
+
 .top-bar {
 
     width:100%;
@@ -16,6 +22,9 @@
     background-color: #35acf1;
     border-bottom:5px solid #2980b9;
     margin:0 0 10px 0;
+    position:fixed;
+    top:0;
+    z-index:10;
 }
 
 .logo a {
@@ -57,4 +66,93 @@ nav a:hover {
     line-height: 50px;
     margin-right:20px;
 }
+
+.wrapper {
+    margin:70px auto;
+    padding:0 10px;
+    width:75%;
+    min-width:950px;
+}
+
+.column{
+    background-color: #fff;
+    padding:10px;
+    border:1px solid #aeaeae;
+    box-shadow: 5px 0px 14px 0px #aeaeae;
+    border-radius:5px;
+    z-index: -1;
+}
+
+.user_details {
+    width:25%;
+    float:left;
+    margin-bottom:20px;
+    border-radius:5px;
+}
+
+.user_detail_image {
+
+
+}
+
+.user_detail_image img {
+    border-radius:5px;
+    width:50%;
+    float: left;
+}
+
+.user_detail_text {
+    width:40%;
+    float: left;
+    margin-left:5px;
+
+}
+
+.main_column {
+    width:70%;
+    float:right;
+    margin-right:4%;
+    margin-bottom:20px;
+    border-radius:5px;
+    min-height:380px;
+    z-index: -1;
+}
+
+.form_style {
+    width:100%;
+}
+
+.form_style textarea {
+    width:80%;
+    height:60px;
+    border-radius: 5px;
+    border:1px solid #a3a3a3;
+    float:left;
+    margin-right:5px;
+    padding:6px;
+    font-size:14px;
+}
+
+textarea:focus {
+    outline:0;
+}
+
+.form_style input[type='submit'] {
+    float:left;
+    border:none;
+    border-radius:5px;
+    font-family: 'Bellota-BoldItalic', 'sans-serif';
+    background-color: #2980B9;
+    color:#fff;
+    width:15%;
+    height:60px;
+    text-shadow: 1px 2px 5px #2980B9;
+    font-size:16px;
+}
+
+.form_style input[type='submit']:active {
+   font-size:18px;
+    background-color: #375eff;
+}
+
 

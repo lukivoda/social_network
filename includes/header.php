@@ -1,4 +1,6 @@
 <?php require 'config/config.php'; ?>
+<?php include 'includes/classes/User.php';?>
+<?php include 'includes/classes/Post.php';?>
 
 <?php
 if(isset($_SESSION['username'])) {
@@ -32,16 +34,18 @@ if(isset($_SESSION['username'])) {
 </head>
 <body>
 
-<div class="top-bar">
-    <div class="logo">
-     <a href="index.php">TwirlFeed!</a>
+    <div class="top-bar">
+        <div class="logo">
+         <a href="index.php">TwirlFeed!</a>
+        </div>
+        <nav>
+            <a href="<?php echo  $_SESSION['username'];  ?>"><?php echo $user['first_name']; ?></a>
+            <a href="index.php"><i class="fa fa-envelope fa-lg"></i></a>
+            <a href=""><i class="fa fa-home fa-lg"></i></a>
+            <a href=""><i class="fa fa-bell fa-lg"></i></a>
+            <a href=""><i class="fa fa-users fa-lg"></i></a>
+            <a href=""><i class="fa fa-cog fa-lg"></i></a>
+            <a href="includes/handlers/logout.php"><i class="fa fa-sign-out fa-lg"></i></a>
+        </nav>
     </div>
-    <nav>
-        <a href=""><?php echo $user['first_name']; ?></a>
-        <a href="index.php"><i class="fa fa-envelope fa-lg"></i></a>
-        <a href=""><i class="fa fa-home fa-lg"></i></a>
-        <a href=""><i class="fa fa-bell fa-lg"></i></a>
-        <a href=""><i class="fa fa-users fa-lg"></i></a>
-        <a href=""><i class="fa fa-cog fa-lg"></i></a>
-    </nav>
-</div>
+    <div class="wrapper">
