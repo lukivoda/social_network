@@ -40,4 +40,99 @@ class Post {
         }
     }
 
+    public function loadPostsFriends(){
+
+        $str = '';//string to return
+
+        $data = mysqli_query($this->con,"SELECT * FROM posts WHERE deleted = 'no' ORDER BY id DESC ");
+
+        while($row = mysqli_fetch_object($data)){
+            $id = $row->id;
+            $body = $row->body;
+            $added_by = $row->added_by;
+            $date_added = $row->date_added;
+
+           //prepare user_to column from posts table
+            if($row->user_to == 'none'){
+                $user_to = '';
+            }else{
+                //we are instancing an object from the User class for user_to(username) column,so we can use the methods from the User class
+                $user_to_object = new User($this->con,$row->user_to);
+                $user_full_name = $user_to_object->getFullName();
+                $user_to = " to <a href='{$row->user_to}'>$user_full_name</a>";
+            }
+
+            //Check if the user who posted has his account closed
+            $added_by_obj =  new User($this->con,$added_by);
+            //if the user is closed we are breaking this iteration
+            if($added_by_obj->isClosed()){
+                continue;
+            }
+
+            //getting details for user who added the post from users table
+            $user_details = mysqli_query($this->con,"SELECT first_name,last_name,profile_pic from users where username = '$added_by'");
+          $user_row = mysqli_fetch_object($user_details);
+          $first_name = $user_row->first_name;
+          $last_name = $user_row->last_name;
+          $profile_pic =$user_row->profile_pic;
+          //Timeframe
+            $time_elapsed = $this->time_elapsed_string($date_added);
+
+            $str .= "<div class='status_post'>
+
+                  <div class='post_profile_pic'>
+                   <img src='$profile_pic' alt='' width='50' >
+                  </div>
+                  <div class='posted_by' style='color: #acacac'>
+                    <a href='$added_by'>$first_name $last_name</a>$user_to &nbsp;&nbsp;&nbsp;&nbsp;$time_elapsed
+                    </div>
+                    <div id='post_body'>
+                       $body
+                    </div>
+                     <br>
+        
+                </div>
+                <hr>
+                ";
+
+
+        }
+
+          echo $str;
+
+
+
+
+    }
+
+
+    public function time_elapsed_string($datetime, $full = false) {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+
 }

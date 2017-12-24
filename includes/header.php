@@ -3,6 +3,7 @@
 <?php include 'includes/classes/Post.php';?>
 
 <?php
+//we are asking if the user is logged in
 if(isset($_SESSION['username'])) {
     $userLoggedIn =  $_SESSION['username'];
     $userDetailsQuery =  mysqli_query($con,"SELECT * FROM users WHERE username =  '$userLoggedIn' ");

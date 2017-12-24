@@ -25,6 +25,19 @@ class User {
         return $this->user->username;
     }
 
+    public function isClosed(){
+        $username = $this->getUsername();
+        $user_closed_query = mysqli_query($this->con,"SELECT user_closed from users WHERE username = '$username'  ");
+        $row = mysqli_fetch_object($user_closed_query);
+        $user_closed = $row->user_closed;
+        if($user_closed == 'yes'){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     public function getNumberOfPosts(){
         return $this->user->num_posts;
     }

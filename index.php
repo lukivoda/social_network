@@ -21,14 +21,21 @@
         </div>
     </div>
     <div class="main_column column">
-        <div class="form_style">
+        <div class="form_style" style="overflow: hidden">
             <form action="index.php" method="post">
                 <textarea name="body" id="posts_text" placeholder="Got something to say"></textarea>
                 <input type="submit" name="btn_post" value="Post">
             </form>
 
+
         </div>
+        <hr>
+        <?php $post = new Post($con,$userLoggedIn);
+        $post->loadPostsFriends();
+
+        ?>
     </div>
+
 </div>
 </body>
 </html>
