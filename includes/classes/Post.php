@@ -40,45 +40,76 @@ class Post {
         }
     }
 
-    public function loadPostsFriends(){
+    public function loadPostsFriends($data, $limit){
+
+        $page = $data['page'];
+        $userLoggedIn = $this->user_obj->getUsername();
+
+        if($page == 1)
+            $start = 0;
+        else
+            $start = ($page - 1) * $limit;
+
 
         $str = '';//string to return
 
         $data = mysqli_query($this->con,"SELECT * FROM posts WHERE deleted = 'no' ORDER BY id DESC ");
 
-        while($row = mysqli_fetch_object($data)){
-            $id = $row->id;
-            $body = $row->body;
-            $added_by = $row->added_by;
-            $date_added = $row->date_added;
+        if(mysqli_num_rows($data) > 0) {
 
-           //prepare user_to column from posts table
-            if($row->user_to == 'none'){
-                $user_to = '';
-            }else{
-                //we are instancing an object from the User class for user_to(username) column,so we can use the methods from the User class
-                $user_to_object = new User($this->con,$row->user_to);
-                $user_full_name = $user_to_object->getFullName();
-                $user_to = " to <a href='{$row->user_to}'>$user_full_name</a>";
-            }
+            $num_iterations = 0; //Number of results checked (not necasserily posted)
+            $count = 1;
 
-            //Check if the user who posted has his account closed
-            $added_by_obj =  new User($this->con,$added_by);
-            //if the user is closed we are breaking this iteration
-            if($added_by_obj->isClosed()){
-                continue;
-            }
+            while ($row = mysqli_fetch_object($data)) {
+                $id = $row->id;
+                $body = $row->body;
+                $added_by = $row->added_by;
+                $date_added = $row->date_added;
 
-            //getting details for user who added the post from users table
-            $user_details = mysqli_query($this->con,"SELECT first_name,last_name,profile_pic from users where username = '$added_by'");
-          $user_row = mysqli_fetch_object($user_details);
-          $first_name = $user_row->first_name;
-          $last_name = $user_row->last_name;
-          $profile_pic =$user_row->profile_pic;
-          //Timeframe
-            $time_elapsed = $this->time_elapsed_string($date_added);
+                //prepare user_to column from posts table
+                if ($row->user_to == 'none') {
+                    $user_to = '';
+                } else {
+                    //we are instancing an object from the User class for user_to(username) column,so we can use the methods from the User class
+                    $user_to_object = new User($this->con, $row->user_to);
+                    $user_full_name = $user_to_object->getFullName();
+                    $user_to = " to <a href='{$row->user_to}'>$user_full_name</a>";
+                }
 
-            $str .= "<div class='status_post'>
+                //Check if the user who posted has his account closed
+                $added_by_obj = new User($this->con, $added_by);
+                //if the user is closed we are breaking this iteration
+                if ($added_by_obj->isClosed()) {
+                    continue;
+                }
+
+
+                if($num_iterations++ < $start)
+                    continue;
+
+
+                //Once 10 posts have been loaded, break
+                if($count > $limit) {
+                    break;
+                }
+                else {
+                    $count++;
+                }
+
+
+
+
+
+                //getting details for user who added the post from users table
+                $user_details = mysqli_query($this->con, "SELECT first_name,last_name,profile_pic from users where username = '$added_by'");
+                $user_row = mysqli_fetch_object($user_details);
+                $first_name = $user_row->first_name;
+                $last_name = $user_row->last_name;
+                $profile_pic = $user_row->profile_pic;
+                //Timeframe
+                $time_elapsed = $this->time_elapsed_string($date_added);
+
+                $str .= "<div class='status_post'>
 
                   <div class='post_profile_pic'>
                    <img src='$profile_pic' alt='' width='50' >
@@ -96,6 +127,13 @@ class Post {
                 ";
 
 
+            }//End while loop
+
+            if($count > $limit)
+                $str .= "<input type='hidden' class='nextPage' value='" . ($page + 1) . "'>
+							<input type='hidden' class='noMorePosts' value='false'>";
+            else
+                $str .= "<input type='hidden' class='noMorePosts' value='true'><p style='text-align: center;'> No more posts to show! </p>";
         }
 
           echo $str;
@@ -105,10 +143,13 @@ class Post {
 
     }
 
-
+   //parsing date to show how much ago is the post
     public function time_elapsed_string($datetime, $full = false) {
+        //current time
         $now = new DateTime;
+        //the time of the post
         $ago = new DateTime($datetime);
+        //difference between these two times
         $diff = $now->diff($ago);
 
         $diff->w = floor($diff->d / 7);
