@@ -41,4 +41,18 @@ class User {
     public function getNumberOfPosts(){
         return $this->user->num_posts;
     }
+
+
+    //Checking if the user who posted the post is our friend or we are the authors of the post
+    public function isFriend($username_to_check) {
+
+        $usernameComma = ",".$username_to_check.",";
+
+        if(strstr($this->user->friends_array,$usernameComma) ||$this->user->username== $username_to_check){
+           return true;
+        }else {
+            return false;
+        }
+
+    }
 }

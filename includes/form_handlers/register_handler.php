@@ -77,7 +77,7 @@ if(isset($_POST['reg_button'])) {
     }else{
         //if we have same passwords
         //we are asking if the password length is less than 6 characters
-        if (strlen($pass1) <= 6) {
+        if (strlen($pass1) < 6) {
             array_push($errorarray,"Your Password Must Contain At Least 6 Characters!<br>");
             //we are asking if the password has at least one number
         }elseif(!preg_match("#[0-9]+#",$pass1)) {

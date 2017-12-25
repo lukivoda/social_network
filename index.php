@@ -33,8 +33,9 @@
 
         <div class="posts_area"></div>
 
-            <img src="assets/images/icons/loading.gif" alt="" id="loading" width="120" style="text-align: center">
-
+        <div style="text-align: center">
+            <img src="assets/images/icons/loading.gif" alt="" id="loading" width="120" >
+        </div>
 
 
 </div>

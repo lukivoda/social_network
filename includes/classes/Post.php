@@ -57,7 +57,7 @@ class Post {
 
         if(mysqli_num_rows($data) > 0) {
 
-            $num_iterations = 0; //Number of results checked (not necasserily posted)
+            $num_iterations = 0; //Number of results checked (not necessarily posted)
             $count = 1;
 
             while ($row = mysqli_fetch_object($data)) {
@@ -78,8 +78,15 @@ class Post {
 
                 //Check if the user who posted has his account closed
                 $added_by_obj = new User($this->con, $added_by);
-                //if the user is closed we are breaking this iteration
+                //if the user is closed we are breaking this iteration and continuing with the next one
                 if ($added_by_obj->isClosed()) {
+                    continue;
+                }
+
+                //Checking if the user who posted the post is our friend or we are the authors of the post
+                $user_logged_obj = new User($this->con, $userLoggedIn);
+                //if the user is not our friend we are breaking this iteration and continuing with the next one
+                if(!$user_logged_obj->isFriend($added_by)){
                     continue;
                 }
 
@@ -88,7 +95,7 @@ class Post {
                     continue;
 
 
-                //Once 10 posts have been loaded, break
+                //Once 6 posts have been loaded, break
                 if($count > $limit) {
                     break;
                 }
